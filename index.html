@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuttingEdge - Office Chair</title>
+    <link rel="stylesheet" href="./style.css">
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <script src="https://kit.fontawesome.com/f9b4791500.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Camera (for future AR) -->
+    <video autoplay playsinline id="camera" style="display: none;"></video>
+
+    <!-- Entire Model Box -->
+    <div class="model-box" id="model-container">
+        <model-viewer
+            id="modelViewer"
+            alt="Office Chair"
+            camera-controls
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            interaction-prompt="none"
+            poster="office_chair_poster.jpg"
+            style="width: 100%; height: 100%;"
+        >
+            <div slot="loading">
+                <p>Loading your chair... 🔄</p>
+                <div class="spinner"></div>
+            </div>
+            <div slot="error">
+                <p>Sorry, we couldn't load the 3D model. Please try again.</p>
+            </div>
+        </model-viewer>
+    </div>
+
+    <!-- Header with Sizes -->
+    <header id="header">
+        <nav>
+            <span>Sizes:</span>
+            <ul id="nav-list">
+                <li><a href="">40 cm</a></li>
+                <li><a href="">45 cm</a></li>
+                <li><a href="">48 cm</a></li>
+                <li><a href="">53 cm</a></li>
+            </ul>
+        </nav>
+        <aside id="info"><i class="fa-solid fa-info"></i></aside>
+    </header>
+
+    <!-- Footer Buttons -->
+    <footer>
+        <button id="visit-site-btn" class="btn">
+            <i class="fa-solid fa-eye"></i>
+            Visit Site
+        </button>
+        <button id="add-to-cart-btn" class="btn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Add to Cart
+        </button>
+    </footer>
+
+    <!-- Info Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-btn">&times;</span>
+            <h2>Product Information</h2>
+            <p>This is a high-quality office chair designed for comfort and durability.</p>
+            <ul>
+                <li>Company: Lewis</li>
+                <li>Status: Available</li>
+                <li>Price: R20,000 inc tax</li>
+                <li>Size: 40cm</li>
+            </ul>
+            <button class="modal-pay">Buy</button>
+        </div>
+    </div>
+
+    <!-- Scale Slider -->
+    <label for="model-scale" class="scale-box">
+        <input type="range" id="model-scale" min="0.1" max="3" step="0.01" value="1">
+    </label>
+
+    <!-- Tap Instruction Overlay (shown before first tap) -->
+    <div id="tap-instruction">
+        Tap to view 3D chair<br>
+        <i class="fa-solid fa-hand-point-down"></i>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
