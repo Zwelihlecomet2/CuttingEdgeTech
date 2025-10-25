@@ -1,284 +1,210 @@
-/* Reset & Base */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f8f8f8;
-    color: #333;
+    overflow: hidden;
     padding: 0;
     margin: 0;
-    position: relative;
-    overflow-x: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Model Container */
+.cover{
+    display:flex;
+}
+
+.uncover{
+    display: none;
+}
+:root {
+    --primary-color-100: #F7F5F0; /* used for buttons, links, and key UI highlights*/
+    --primary-color-300: #F1EDE2;
+    --primary-color-500: #EAE4D5;
+    --primary-color-700: #9F9B91;
+    --primary-color-900: #54524D;
+    --secondary-color-500: #F2F2F2;/* used for headers, borders, or contrasting el3ements*/
+    --neutral: #000000; /* used for backgrounds, shadow, or base text*/
+    --accent: #B6B09F; /* used to highlight key areas, or provide contrast*/
+
+}
+
+video {
+    min-height: 100vh;
+    position: fixed;
+    inset: 0;
+    object-fit: cover; 
+    z-index: -1;
+}
+
+model-viewer {
+    width: 100%;
+    height: 500px;
+    background-color: transparent;
+    pointer-events: auto;
+}
+
+
+
 .model-box {
-    width: 100%;
-    max-width: 600px;
-    height: 400px;
-    margin: 40px auto;
     position: relative;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+    width: 100vw; 
+    height: 100vh;
+    pointer-events: none;
 }
 
-#modelViewer {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-/* Header */
+/* =====================================Header======================================== */
 #header {
-    text-align: center;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    position: sticky;
+    position: absolute;
     top: 0;
-    z-index: 100;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px 10px 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Optional: adds a blur effect to the background */
 }
 
-#header nav span {
+#header nav {
+    display: flex;
+    flex-direction: column;
+}
+
+#header nav .scale-box {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
     font-weight: bold;
-    color: #555;
-    margin-right: 15px;
+    color: var(--primary-color-900);
 }
 
-#nav-list {
-    display: flex;
-    justify-content: center;
+.scale-box input {
+    width: 100%;
+}
+
+#header nav ul {
     list-style: none;
-    margin-top: 10px;
+    display: flex;
+    gap: 6px;
 }
 
-#nav-list li {
-    margin: 0 8px;
-}
 
-#nav-list a {
+#header nav ul li a {
     text-decoration: none;
-    color: #333;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    transition: background-color 0.2s;
+    color: var(--primary-color-900);
+    font-weight: 500;
+    border-radius: 5px;
+    padding: 6px 6px 0 0;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-#nav-list a:hover {
-    background-color: #f0f0f0;
+#header nav ul li a:hover {
+    transform: scale(1.5);
+}
+.group{
+    display: flex;
+    gap: 0px;
 }
 
-#info {
-    cursor: pointer;
-    font-size: 20px;
-    margin-top: 10px;
-    color: #666;
+i:not(footer i) {
+    color: #0079d9;
 }
 
-#info:hover {
-    color: #333;
-}
-
-/* Footer */
-footer {
+aside {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    position: sticky;
-    bottom: 0;
-    z-index: 100;
+    align-items: center;
+    /* background-color: #044385; */
+    padding: 8px;
+    font-size: 10px;
+    color: white;
+    border-radius: 100%;
+    /* width: 20px;
+    height: 20px; */
+    cursor: pointer;
+    transition: color 0.3s;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+/* ===================================================Footer============================== */
+footer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    bottom: 20px;
+    width: 100%;
+    padding: 8px;
 }
 
 .btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    background-color: #0066cc;
-    color: white;
-    font-weight: 500;
-}
-
-.btn:hover {
-    background-color: #0055aa;
-    transform: translateY(-2px);
-}
-
-.btn i {
-    font-size: 18px;
-}
-
-/* Scale Slider */
-.scale-box {
-    display: block;
-    width: 80%;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 10px;
-    text-align: center;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-#model-scale {
-    width: 100%;
-}
-
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    padding-top: 60px;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    position: relative;
-}
-
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    position: absolute;
-    top: 10px;
-    right: 15px;
-}
-
-.close-btn:hover {
-    color: #000;
-}
-
-.modal h2 {
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.modal p {
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
-
-.modal ul {
-    margin-bottom: 20px;
-    padding-left: 20px;
-}
-
-.modal li {
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
-
-.modal-pay {
-    background-color: #0066cc;
+    background-color: #0079d9;
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    width: fit-content;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* ==================================================modal============================================= */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s, visibility 0.3s;
+    color: var(--primary-color-900);
+}
+.modal-content {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 500px;
+    position: relative;
+}
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.modal-pay {
+    background-color: #0079d9;
+    color: white;
+    border: none;
+    margin-top: 20px;
+    padding: 10px 20px;
+    width: 100%;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    width: 100%;
-    margin-top: 10px;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
-.modal-pay:hover {
-    background-color: #0055aa;
-}
 
-/* Spinner */
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(0,0,0,0.1);
-    border-radius: 50%;
-    border-left-color: #000;
-    animation: spin 1s linear infinite;
-    margin: 10px auto;
-    display: block;
-}
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Tap Instruction Overlay */
-#tap-instruction {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 1.5rem;
-    border-radius: 16px;
-    font-size: 18px;
-    text-align: center;
-    pointer-events: none;
-    z-index: 100;
-    font-weight: 500;
-    opacity: 1;
-    transition: opacity 0.5s ease;
-}
-
-#tap-instruction i {
-    margin-top: 10px;
-    font-size: 24px;
-    color: #ccc;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    .model-box {
-        height: 300px;
-    }
-
-    #header nav span,
-    #nav-list li a {
-        font-size: 13px;
-    }
-
-    footer {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .btn {
-        width: 100%;
-        max-width: 250px;
-    }
-
-    #tap-instruction {
-        font-size: 16px;
-        padding: 1rem;
-    }
-}

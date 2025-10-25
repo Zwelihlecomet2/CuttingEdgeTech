@@ -1,70 +1,60 @@
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.161.1/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.161.1/examples/jsm/loaders/GLTFLoader.js';
+import { ARButton } from 'https://cdn.jsdelivr.net/npm/three@0.161.1/examples/jsm/webxr/ARButton.js';
+
+
 document.addEventListener('DOMContentLoaded', () => {
-    const modelViewer = document.getElementById('modelViewer');
-    const modelContainer = document.getElementById('model-container');
-    const tapInstruction = document.getElementById('tap-instruction');
-    const infoBtn = document.getElementById('info');
-    const infoModal = document.getElementById('info-modal');
-    const closeBtn = document.getElementById('close-btn');
-    const scaleInput = document.getElementById('model-scale');
+  // Camera Access
+  const video = document.getElementById('camera');
+  navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } }, audio: false })
+    .then(stream => { video.srcObject = stream; })
+    .catch(error => { console.error("Error accessing camera:", error); });
 
-    let hasLoadedModel = false;
+  // Three.js + AR Setup
+  let camera, scene, renderer, model;
 
-    // --- LAZY LOAD MODEL ON FIRST TAP ---
-    function loadModelOnTap() {
-        if (hasLoadedModel) return;
+  init();
 
-        hasLoadedModel = true;
+  function init() {
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 20);
 
-        // Hide tap instruction
-        tapInstruction.style.opacity = '0';
-        setTimeout(() => {
-            tapInstruction.style.display = 'none';
-        }, 500);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.xr.enabled = true;
+    document.body.appendChild(renderer.domElement);
 
-        // Load the 3D model now
-        modelViewer.src = 'office_chair.glb';
+    document.body.appendChild(ARButton.createButton(renderer, { requiredFeatures: ['hit-test'] }));
 
-        console.log('✅ 3D model loaded on first tap!');
-    }
+    const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+    scene.add(light);
 
-    // Attach tap/click listeners to container (not just model viewer)
-    modelContainer.addEventListener('click', loadModelOnTap, { once: true });
-    modelContainer.addEventListener('touchstart', loadModelOnTap, { once: true });
-
-    // --- SCALE CONTROL ---
-    scaleInput.addEventListener('input', () => {
-        const scaleValue = parseFloat(scaleInput.value);
-        modelViewer.scale = scaleValue;
+    const loader = new GLTFLoader();
+    loader.load('office_chair.glb', (gltf) => {
+      model = gltf.scene;
+      model.scale.set(0.5, 0.5, 0.5); // initial scale
     });
 
-    // --- INFO MODAL ---
-    infoBtn.addEventListener('click', () => {
-        infoModal.style.display = 'block';
+    // AR Hit Test (place model on tap)
+    const controller = renderer.xr.getController(0);
+    controller.addEventListener('select', () => {
+      if (model) {
+        const clone = model.clone();
+        clone.position.set(0, 0, -1).applyMatrix4(controller.matrixWorld);
+        clone.quaternion.setFromRotationMatrix(controller.matrixWorld);
+        scene.add(clone);
+      }
     });
+    scene.add(controller);
 
-    closeBtn.addEventListener('click', () => {
-        infoModal.style.display = 'none';
-    });
 
-    window.addEventListener('click', (e) => {
-        if (e.target === infoModal) {
-            infoModal.style.display = 'none';
-        }
-    });
 
-    // --- BUTTONS ---
-    document.getElementById('visit-site-btn').addEventListener('click', () => {
-        alert('Visit Site clicked! (Link would open here)');
-    });
+    renderer.setAnimationLoop(() => { renderer.render(scene, camera); });
+  }
 
-    document.getElementById('add-to-cart-btn').addEventListener('click', () => {
-        alert('Added to Cart! (Cart logic would go here)');
-    });
-
-    // --- OPTIONAL: AUTO-ROTATE AFTER LOAD ---
-    modelViewer.addEventListener('load', () => {
-        // You could enable auto-rotate here if desired:
-        // modelViewer.autoRotate = true;
-        // modelViewer.autoRotateSpeed = 0.5;
-    });
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 });
