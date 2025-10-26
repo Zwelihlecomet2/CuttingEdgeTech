@@ -18,6 +18,18 @@ const AppController = {
     'bedside_table__wardrobe.glb'
   ],
 
+  // optional per-model metadata: friendly label, thumbnail (optional), default scale and camera orbit
+  modelsMeta: {
+    'office_chair.glb': { label: 'Premium Office Chair', scale: 1.0 },
+    '3d_sofa_rendering.glb': { label: 'Modern Sofa', scale: 0.9 },
+    'kitchen_table.glb': { label: 'Kitchen Table', scale: 1.2 },
+    'gertie_2_seater_sofa_dufrene_moss_velvet.glb': { label: 'Gertie 2-Seater Sofa', scale: 0.85 },
+    'ergonomic_mesh_office_chair.glb': { label: 'Ergonomic Mesh Chair', scale: 1.0 },
+    'dining_tablegame_ready.glb': { label: 'Dining Table', scale: 1.1 },
+    'couch (2).glb': { label: 'Couch', scale: 0.95 },
+    'bedside_table__wardrobe.glb': { label: 'Bedside / Wardrobe', scale: 1.0 }
+  },
+
   productData: {
     'office_chair.glb': {
       name: 'Premium Office Chair',
@@ -45,6 +57,8 @@ const AppController = {
     this.setupGestureHints();
     this.setupKeyboardShortcuts();
     this.populateModelSelector();
+    // initialize preview for current model
+    this.updateModelPreview(this.currentModel);
   },
 
   setupEventListeners() {
@@ -185,9 +199,24 @@ const AppController = {
     // update the visible model-viewer
     this.modelViewer.src = modelSrc;
 
-    // tell the AR/Three.js loader to switch the GLTF used for placement
+    // apply per-model preview settings (scale, camera)
+    const meta = this.modelsMeta[modelSrc] || {};
+    const preferredScale = typeof meta.scale === 'number' ? meta.scale : 1.0;
+    try {
+      this.modelViewer.scale = `${preferredScale} ${preferredScale} ${preferredScale}`;
+      const scaleValue = document.getElementById('scale-value');
+      if (scaleValue) scaleValue.textContent = `${parseFloat(preferredScale).toFixed(2)}x`;
+      if (meta.cameraOrbit) {
+        this.modelViewer.cameraOrbit = meta.cameraOrbit;
+      }
+    } catch (e) { /* ignore if model-viewer not ready */ }
+
+    // update preview thumbnail
+    this.updateModelPreview(modelSrc);
+
+    // tell the AR/Three.js loader to switch the GLTF used for placement and pass scale
     if (typeof window.setARModel === 'function') {
-      window.setARModel(modelSrc);
+      window.setARModel(modelSrc, preferredScale);
     }
 
     this.updateProductInfo();
@@ -217,6 +246,27 @@ const AppController = {
     });
     // set current selection
     select.value = this.currentModel;
+  },
+
+  // update preview thumbnail and any UI hints for the selected model
+  updateModelPreview(modelSrc) {
+    const thumbEl = document.getElementById('model-thumb');
+    const labelEl = document.getElementById('model-preview-label');
+    const meta = this.modelsMeta[modelSrc] || {};
+    const label = meta.label || this.friendlyName(modelSrc);
+    if (labelEl) labelEl.textContent = label;
+
+    // if there's a provided thumbnail in meta, use it; otherwise generate a simple SVG placeholder
+    if (meta.thumbnail) {
+      if (thumbEl) thumbEl.style.backgroundImage = `url('${meta.thumbnail}')`;
+    } else {
+      // generate data-uri svg with initials
+      const initials = label.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+      const bg = '#0b6efd';
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='200' height='120'><rect width='100%' height='100%' fill='${bg}' rx='12'/><text x='50%' y='55%' font-size='36' fill='white' text-anchor='middle' font-family='Inter,Arial' dy='.35em'>${initials}</text></svg>`;
+      const dataUri = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      if (thumbEl) thumbEl.style.backgroundImage = `url('${dataUri}')`;
+    }
   },
 
   friendlyName(filename) {

@@ -72,10 +72,16 @@
         <nav>
           <div class="model-selector">
             <label class="selector-label">Model</label>
-            <select id="model-select" class="model-dropdown">
-              <option value="office_chair.glb">Office Chair</option>
-              <option value="3d_sofa_rendering.glb">Modern Sofa</option>
-            </select>
+            <div class="model-selector-inner">
+              <select id="model-select" class="model-dropdown">
+                <option value="office_chair.glb">Office Chair</option>
+                <option value="3d_sofa_rendering.glb">Modern Sofa</option>
+              </select>
+              <div class="model-preview" aria-hidden="true">
+                <div id="model-thumb" class="model-thumb"></div>
+                <div id="model-preview-label" class="model-preview-label">Office Chair</div>
+              </div>
+            </div>
           </div>
           <label for="model-scale" class="scale-box">
             <span class="scale-label">Scale</span>

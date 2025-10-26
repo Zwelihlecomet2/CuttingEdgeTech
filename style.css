@@ -340,6 +340,38 @@ model-viewer {
     box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
 }
 
+.model-selector-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.model-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.model-thumb {
+    width: 56px;
+    height: 40px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.model-preview-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--neutral-800);
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .scale-box {
     display: flex;
     flex-direction: column;

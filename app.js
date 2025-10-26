@@ -50,21 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer.setAnimationLoop(() => { renderer.render(scene, camera); });
   }
 
-  function loadARModel(url) {
+  function loadARModel(url, preferredScale = 0.5) {
     if (!loader) loader = new GLTFLoader();
     // keep reference to loader-loaded scene for cloning when placing in AR
     loader.load(url, (gltf) => {
       model = gltf.scene;
       // set a reasonable default scale for models (adjust as needed)
-      try { model.scale.set(0.5, 0.5, 0.5); } catch (e) {}
+      try { model.scale.set(preferredScale, preferredScale, preferredScale); } catch (e) {}
       console.log('AR model loaded:', url);
     }, undefined, (err) => { console.error('Error loading AR model', err); });
   }
 
   // Expose a setter so other scripts can change which GLTF is used for AR placement
-  window.setARModel = function(url) {
+  // Accepts optional preferredScale to apply immediately after loading
+  window.setARModel = function(url, preferredScale) {
     if (!url) return;
-    loadARModel(url);
+    loadARModel(url, typeof preferredScale === 'number' ? preferredScale : 0.5);
   };
 
   window.addEventListener('resize', () => {
