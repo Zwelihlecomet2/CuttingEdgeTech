@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Three.js + AR Setup
   let camera, scene, renderer, model;
+  let loader;
 
   init();
 
@@ -29,11 +30,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
     scene.add(light);
 
-    const loader = new GLTFLoader();
-    loader.load('office_chair.glb', (gltf) => {
-      model = gltf.scene;
-      model.scale.set(0.5, 0.5, 0.5); // initial scale
-    });
+    loader = new GLTFLoader();
+
+    // load default model for AR interactions
+    loadARModel('office_chair.glb');
 
     // AR Hit Test (place model on tap)
     const controller = renderer.xr.getController(0);
@@ -47,10 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     scene.add(controller);
 
-
-
     renderer.setAnimationLoop(() => { renderer.render(scene, camera); });
   }
+
+  function loadARModel(url) {
+    if (!loader) loader = new GLTFLoader();
+    // keep reference to loader-loaded scene for cloning when placing in AR
+    loader.load(url, (gltf) => {
+      model = gltf.scene;
+      // set a reasonable default scale for models (adjust as needed)
+      try { model.scale.set(0.5, 0.5, 0.5); } catch (e) {}
+      console.log('AR model loaded:', url);
+    }, undefined, (err) => { console.error('Error loading AR model', err); });
+  }
+
+  // Expose a setter so other scripts can change which GLTF is used for AR placement
+  window.setARModel = function(url) {
+    if (!url) return;
+    loadARModel(url);
+  };
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;

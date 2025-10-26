@@ -6,6 +6,18 @@ const AppController = {
   screenshots: [],
   isFullscreen: false,
 
+  // list of available models in the project (add new filenames here)
+  models: [
+    'office_chair.glb',
+    '3d_sofa_rendering.glb',
+    'kitchen_table.glb',
+    'gertie_2_seater_sofa_dufrene_moss_velvet.glb',
+    'ergonomic_mesh_office_chair.glb',
+    'dining_tablegame_ready.glb',
+    'couch (2).glb',
+    'bedside_table__wardrobe.glb'
+  ],
+
   productData: {
     'office_chair.glb': {
       name: 'Premium Office Chair',
@@ -19,6 +31,7 @@ const AppController = {
       price: 'R45,000',
       size: '220cm'
     }
+    // other models will get default product data when selected
   },
 
   init() {
@@ -31,6 +44,7 @@ const AppController = {
     this.setupModelLoading();
     this.setupGestureHints();
     this.setupKeyboardShortcuts();
+    this.populateModelSelector();
   },
 
   setupEventListeners() {
@@ -64,7 +78,7 @@ const AppController = {
     });
 
     const modelSelect = document.getElementById('model-select');
-    modelSelect.addEventListener('change', (e) => this.switchModel(e.target.value));
+  modelSelect.addEventListener('change', (e) => this.switchModel(e.target.value));
 
     const fullscreenBtn = document.getElementById('fullscreen-btn');
     fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
@@ -168,9 +182,47 @@ const AppController = {
     loadingOverlay.style.display = 'flex';
     loadingOverlay.classList.remove('fade-out');
 
+    // update the visible model-viewer
     this.modelViewer.src = modelSrc;
+
+    // tell the AR/Three.js loader to switch the GLTF used for placement
+    if (typeof window.setARModel === 'function') {
+      window.setARModel(modelSrc);
+    }
+
     this.updateProductInfo();
     this.showNotification('Switching model...', 'info');
+  },
+
+  // populate the model select dropdown using the models array
+  populateModelSelector() {
+    const select = document.getElementById('model-select');
+    if (!select) return;
+    select.innerHTML = '';
+    this.models.forEach((m) => {
+      const option = document.createElement('option');
+      option.value = m;
+      // human-friendly label
+      option.textContent = this.friendlyName(m);
+      select.appendChild(option);
+      // ensure we have basic product data for unknown models
+      if (!this.productData[m]) {
+        this.productData[m] = {
+          name: this.friendlyName(m),
+          description: 'High-quality 3D model.',
+          price: 'Contact for price',
+          size: 'N/A'
+        };
+      }
+    });
+    // set current selection
+    select.value = this.currentModel;
+  },
+
+  friendlyName(filename) {
+    // strip extension and replace underscores/dashes with spaces, capitalize words
+    const name = filename.replace(/\.glb$/i, '').replace(/[_\-]+/g, ' ');
+    return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   },
 
   updateProductInfo() {
