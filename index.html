@@ -16,6 +16,17 @@
 
     <canvas id="screenshot-canvas" style="display: none;"></canvas>
 
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loader-content">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading 3D Model...</p>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-text" id="progress-text">0%</span>
+      </div>
+    </div>
+
     <video autoplay
           playsinline
           id="camera">
@@ -25,6 +36,16 @@
       <div class="brand-badge">
         <i class="fa-solid fa-cube"></i>
         <span>CuttingEdgeTech</span>
+      </div>
+      <div class="gesture-hints" id="gesture-hints">
+        <div class="hint-item">
+          <i class="fa-solid fa-hand"></i>
+          <span>Drag to rotate</span>
+        </div>
+        <div class="hint-item">
+          <i class="fa-solid fa-up-down-left-right"></i>
+          <span>Pinch to zoom</span>
+        </div>
       </div>
     </div>
 
@@ -49,6 +70,13 @@
 
     <header id="header">
         <nav>
+          <div class="model-selector">
+            <label class="selector-label">Model</label>
+            <select id="model-select" class="model-dropdown">
+              <option value="office_chair.glb">Office Chair</option>
+              <option value="3d_sofa_rendering.glb">Modern Sofa</option>
+            </select>
+          </div>
           <label for="model-scale" class="scale-box">
             <span class="scale-label">Scale</span>
             <div class="scale-control">
@@ -58,6 +86,12 @@
           </label>
         </nav>
         <div class="group">
+          <button class="icon-btn" id="fullscreen-btn" aria-label="Fullscreen">
+            <i class="fa-solid fa-expand"></i>
+          </button>
+          <button class="icon-btn" id="gallery-btn" aria-label="Screenshot Gallery">
+            <i class="fa-solid fa-images"></i>
+          </button>
           <button class="icon-btn" id="screenshot-btn" aria-label="Take Screenshot">
             <i class="fa-solid fa-camera"></i>
           </button>
@@ -94,11 +128,11 @@
             <i class="fa-solid fa-xmark"></i>
           </button>
           <div class="modal-header">
-            <h2>Product Information</h2>
+            <h2 id="product-name">Product Information</h2>
             <span class="badge badge-success">Available</span>
           </div>
           <div class="modal-body">
-            <p class="product-description">This is a high-quality office chair designed for comfort and durability.</p>
+            <p class="product-description" id="product-description">This is a high-quality office chair designed for comfort and durability.</p>
             <div class="product-details">
               <div class="detail-item">
                 <span class="detail-label">Company</span>
@@ -110,11 +144,11 @@
               </div>
               <div class="detail-item">
                 <span class="detail-label">Price</span>
-                <span class="detail-value detail-price">R20,000</span>
+                <span class="detail-value detail-price" id="product-price">R20,000</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">Size</span>
-                <span class="detail-value">40cm</span>
+                <span class="detail-value" id="product-size">40cm</span>
               </div>
             </div>
           </div>
@@ -126,9 +160,35 @@
           </div>
         </div>
       </div>
+
+      <div id="gallery-modal" class="modal">
+        <div class="modal-overlay" id="gallery-overlay"></div>
+        <div class="modal-content gallery-content">
+          <button class="close-btn" id="gallery-close-btn" aria-label="Close">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div class="modal-header">
+            <h2>Screenshot Gallery</h2>
+            <button class="clear-gallery-btn" id="clear-gallery-btn">
+              <i class="fa-solid fa-trash"></i>
+              Clear All
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="gallery-grid" id="gallery-grid">
+              <div class="empty-gallery">
+                <i class="fa-solid fa-camera"></i>
+                <p>No screenshots yet</p>
+                <span>Take your first screenshot to see it here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     
 
     <script src="app.js"></script>
+    <script src="enhanced-features.js"></script>
     <script>
       a = document.getElementById("below");
       b = document.querySelector(".cover");
