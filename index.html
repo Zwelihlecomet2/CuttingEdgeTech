@@ -69,16 +69,14 @@
     </div>
 
     <header id="header">
-        <nav>
+        <nav style="display: flex; flex-direction: column; gap: 10px;"></nav>
           <div class="model-selector">
             <label class="selector-label">Model</label>
             <div class="model-selector-inner">
               <select id="model-select" class="model-dropdown">
-                <option value="office_chair.glb">Office Chair</option>
-                <option value="3d_sofa_rendering.glb">Modern Sofa</option>
+          <option value="office_chair.glb">Office Chair</option>
+          <option value="3d_sofa_rendering.glb">Modern Sofa</option>
               </select>
-              <!-- keep the overlay/flex container but remove the thumbnail content -->
-              <div class="model-preview" aria-hidden="true"></div>
             </div>
           </div>
           <label for="model-scale" class="scale-box">
