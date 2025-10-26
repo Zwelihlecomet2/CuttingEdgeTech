@@ -14,13 +14,22 @@
 </head>
 <body>
 
-    <video autoplay 
-          playsinline 
+    <canvas id="screenshot-canvas" style="display: none;"></canvas>
+
+    <video autoplay
+          playsinline
           id="camera">
     </video>
-    <!-- Entire Model Box -->
+
+    <div class="ar-overlay">
+      <div class="brand-badge">
+        <i class="fa-solid fa-cube"></i>
+        <span>CuttingEdgeTech</span>
+      </div>
+    </div>
+
     <div class="model-box">
-      <model-viewer id="modelViewer" 
+      <model-viewer id="modelViewer"
                     src="office_chair.glb"
                     alt="Office Chair"
                     ar
@@ -29,6 +38,12 @@
                     camera-controls
                     interaction-prompt="none"
                     auto-rotate>
+        <div class="ar-prompt" slot="ar-prompt">
+          <div class="ar-prompt-content">
+            <i class="fa-solid fa-hand-pointer"></i>
+            <p>Tap to place in your space</p>
+          </div>
+        </div>
       </model-viewer>
     </div>
 
@@ -43,6 +58,9 @@
           </label>
         </nav>
         <div class="group">
+          <button class="icon-btn" id="screenshot-btn" aria-label="Take Screenshot">
+            <i class="fa-solid fa-camera"></i>
+          </button>
           <button class="icon-btn" id="info" aria-label="Product Information">
             <i class="fa-solid fa-info"></i>
           </button>
@@ -52,14 +70,20 @@
         </div>
      </header>
      <footer class="cover">
-      <button id="visit-site-btn" class="btn btn-secondary" onclick="window.location.href='https://giwml-105-247-226-250.a.free.pinggy.link/unified_login.php'">
-        <i class="fa-solid fa-eye"></i>
-        <span>View Details</span>
-      </button>
-      <button id="add-to-cart-btn" class="btn btn-primary">
-        <i class="fa-solid fa-cart-shopping"></i>
-        <span>Add to Cart</span>
-      </button>
+      <div class="action-group">
+        <button id="screenshot-mobile-btn" class="btn btn-tertiary" aria-label="Capture">
+          <i class="fa-solid fa-camera"></i>
+          <span>Capture</span>
+        </button>
+        <button id="visit-site-btn" class="btn btn-secondary" onclick="window.location.href='https://giwml-105-247-226-250.a.free.pinggy.link/unified_login.php'">
+          <i class="fa-solid fa-eye"></i>
+          <span>View Details</span>
+        </button>
+        <button id="add-to-cart-btn" class="btn btn-primary">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Add to Cart</span>
+        </button>
+      </div>
       <button slot="ar-button" class="btn" style="visibility: hidden;">AR</button>
      </footer>
 
@@ -127,12 +151,77 @@
       const modalOverlay = document.getElementById('modal-overlay');
       modalOverlay.addEventListener('click', () => { infoModal.style.display = 'none'; });
 
+      // Screenshot functionality
+      const screenshotBtn = document.getElementById('screenshot-btn');
+      const screenshotMobileBtn = document.getElementById('screenshot-mobile-btn');
+      const video = document.getElementById('camera');
+      const canvas = document.getElementById('screenshot-canvas');
       const modelViewer = document.getElementById('modelViewer');
-        const scaleSlider = document.getElementById('model-scale');
+
+      function captureScreenshot() {
+        // Set canvas size to match video
+        canvas.width = video.videoWidth || window.innerWidth;
+        canvas.height = video.videoHeight || window.innerHeight;
+
+        const ctx = canvas.getContext('2d');
+
+        // Draw video frame
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Add watermark/branding
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = 'bold 24px Inter';
+        const text = 'CuttingEdgeTech';
+        const textWidth = ctx.measureText(text).width;
+        const padding = 20;
+        const boxHeight = 50;
+
+        ctx.fillRect(canvas.width - textWidth - padding * 2 - 10, canvas.height - boxHeight - padding, textWidth + padding * 2, boxHeight);
+        ctx.fillStyle = '#0284c7';
+        ctx.fillText(text, canvas.width - textWidth - padding - 10, canvas.height - padding - 15);
+
+        // Download image
+        canvas.toBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `ar-view-${Date.now()}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          // Show success feedback
+          showNotification('Screenshot saved!');
+        });
+      }
+
+      function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${message}`;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.classList.add('show');
+        }, 10);
+
+        setTimeout(() => {
+          notification.classList.remove('show');
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 300);
+        }, 2000);
+      }
+
+      screenshotBtn.addEventListener('click', captureScreenshot);
+      screenshotMobileBtn.addEventListener('click', captureScreenshot);
+
+      const scaleSlider = document.getElementById('model-scale');
         const scaleValue = document.getElementById('scale-value');
         scaleSlider.addEventListener('input', () => {
           const scale = scaleSlider.value;
-          modelViewer.scale = `${scale} ${scale} ${scale}`;
+          modelViewer2.scale = `${scale} ${scale} ${scale}`;
           scaleValue.textContent = `${parseFloat(scale).toFixed(2)}x`;
         });
     </script>

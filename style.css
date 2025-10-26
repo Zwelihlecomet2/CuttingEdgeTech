@@ -65,6 +65,7 @@ video {
     inset: 0;
     object-fit: cover;
     z-index: -1;
+    filter: brightness(1.05) contrast(1.05);
 }
 
 model-viewer {
@@ -79,6 +80,99 @@ model-viewer {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
+}
+
+.ar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 50;
+}
+
+.brand-badge {
+    position: absolute;
+    bottom: var(--spacing-xl);
+    left: var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    padding: 12px 20px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: slideInLeft 0.6s ease;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.brand-badge i {
+    color: var(--primary-600);
+    font-size: 18px;
+}
+
+.brand-badge span {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--neutral-800);
+    letter-spacing: 0.5px;
+}
+
+.ar-prompt {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    pointer-events: none;
+}
+
+.ar-prompt-content {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    box-shadow: var(--shadow-xl);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+.ar-prompt-content i {
+    font-size: 32px;
+    color: var(--primary-500);
+}
+
+.ar-prompt-content p {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
 }
 
 #header {
@@ -235,6 +329,13 @@ footer {
     z-index: 100;
 }
 
+.action-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    align-items: flex-end;
+}
+
 .btn {
     border: none;
     padding: 14px 24px;
@@ -286,6 +387,39 @@ footer {
 }
 
 .btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-tertiary {
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-tertiary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-tertiary:hover::before {
+    left: 100%;
+}
+
+.btn-tertiary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg), 0 0 20px rgba(14, 165, 233, 0.4);
+}
+
+.btn-tertiary:active {
     transform: translateY(0);
     box-shadow: var(--shadow-md);
 }
@@ -486,6 +620,35 @@ footer {
     font-size: 18px;
 }
 
+.notification {
+    position: fixed;
+    bottom: 100px;
+    right: var(--spacing-lg);
+    background: var(--success-600);
+    color: white;
+    padding: 16px 24px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    box-shadow: var(--shadow-xl);
+    font-weight: 600;
+    font-size: 15px;
+    z-index: 10000;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification i {
+    font-size: 20px;
+}
+
 @media (max-width: 768px) {
     #header {
         padding: var(--spacing-md);
@@ -500,6 +663,11 @@ footer {
         bottom: var(--spacing-md);
     }
 
+    .action-group {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
     .btn {
         padding: 12px 18px;
         font-size: 14px;
@@ -512,6 +680,27 @@ footer {
     .modal-content {
         width: 95%;
         margin: var(--spacing-md);
+    }
+
+    .brand-badge {
+        bottom: var(--spacing-md);
+        left: var(--spacing-md);
+        padding: 10px 16px;
+    }
+
+    .brand-badge span {
+        font-size: 12px;
+    }
+
+    .brand-badge i {
+        font-size: 16px;
+    }
+
+    .notification {
+        right: var(--spacing-md);
+        bottom: 80px;
+        padding: 12px 20px;
+        font-size: 14px;
     }
 }
 
