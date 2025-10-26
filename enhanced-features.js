@@ -14,7 +14,7 @@ const AppController = {
     'gertie_2_seater_sofa_dufrene_moss_velvet.glb',
     'ergonomic_mesh_office_chair.glb',
     'dining_tablegame_ready.glb',
-    'couch (2).glb',
+    'couch.glb',
     'bedside_table__wardrobe.glb'
   ],
 
