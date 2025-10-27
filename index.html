@@ -69,7 +69,7 @@
     </div>
 
     <header id="header">
-        <nav>
+        <nav style="display: flex; flex-direction: column; gap: 10px;"></nav>
           <div class="model-selector">
             <label class="selector-label">Model</label>
             <div class="model-selector-inner">
@@ -111,57 +111,57 @@
           <i class="fa-solid fa-camera"></i>
           <span>Capture</span>
         </button>
-        <button id="visit-site-btn" class="btn btn-secondary" onclick="window.location.href='https://giwml-105-247-226-250.a.free.pinggy.link/unified_login.php'">
+        <a href="https://bradlow.netlify.app/" id="visit-site-btn" class="btn btn-secondary" target="_blank">
           <i class="fa-solid fa-eye"></i>
           <span>View Details</span>
-        </button>
-        <button id="add-to-cart-btn" class="btn btn-primary">
+        </a>
+        <a href="https://bradlow.netlify.app/" target="_blank" id="add-to-cart-btn" class="btn btn-primary">
           <i class="fa-solid fa-cart-shopping"></i>
           <span>Add to Cart</span>
-        </button>
+        </a>
       </div>
       <button slot="ar-button" class="btn" style="visibility: hidden;">AR</button>
      </footer>
 
-     <div id="info-modal" class="modal">
-        <div class="modal-overlay" id="modal-overlay"></div>
-        <div class="modal-content">
-          <button class="close-btn" id="close-btn" aria-label="Close">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          <div class="modal-header">
-            <h2 id="product-name">Product Information</h2>
-            <span class="badge badge-success">Available</span>
+    <div id="info-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="product-name" aria-describedby="product-description">
+       <div class="modal-overlay" id="modal-overlay" tabindex="-1"></div>
+       <div class="modal-content" role="document">
+      <button class="close-btn" id="close-btn" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-header">
+        <h2 id="product-name">Product Information</h2>
+        <span class="badge badge-success" aria-hidden="true">Available</span>
+      </div>
+      <div class="modal-body">
+        <p class="product-description" id="product-description">This is a high-quality office chair designed for comfort and durability.</p>
+        <div class="product-details">
+          <div class="detail-item">
+         <span class="detail-label">Company</span>
+         <span class="detail-value">Lewis</span>
           </div>
-          <div class="modal-body">
-            <p class="product-description" id="product-description">This is a high-quality office chair designed for comfort and durability.</p>
-            <div class="product-details">
-              <div class="detail-item">
-                <span class="detail-label">Company</span>
-                <span class="detail-value">Lewis</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Status</span>
-                <span class="detail-value">Available</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Price</span>
-                <span class="detail-value detail-price" id="product-price">R20,000</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-label">Size</span>
-                <span class="detail-value" id="product-size">40cm</span>
-              </div>
-            </div>
+          <div class="detail-item">
+         <span class="detail-label">Status</span>
+         <span class="detail-value">Available</span>
           </div>
-          <div class="modal-footer">
-            <button class="modal-pay">
-              <i class="fa-solid fa-shopping-bag"></i>
-              <span>Purchase Now</span>
-            </button>
+          <div class="detail-item">
+         <span class="detail-label">Price</span>
+         <span class="detail-value detail-price" id="product-price">R20,000</span>
+          </div>
+          <div class="detail-item">
+         <span class="detail-label">Size</span>
+         <span class="detail-value" id="product-size">40cm</span>
           </div>
         </div>
       </div>
+      <div class="modal-footer">
+        <button class="modal-pay" id="purchase-now-btn" aria-label="Purchase">
+          <i class="fa-solid fa-shopping-bag" aria-hidden="true"></i>
+          <a id="purchase-now" href="https://bradlow.netlify.app/" target="_blank" rel="noopener noreferrer">Purchase Now</a>
+        </button>
+      </div>
+       </div>
+     </div>
 
       <div id="gallery-modal" class="modal">
         <div class="modal-overlay" id="gallery-overlay"></div>
