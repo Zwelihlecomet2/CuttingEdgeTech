@@ -985,9 +985,10 @@ footer {
     color: white;
 }
 
-#fullscreen-btn, #gallery-btn, #screenshot-btn {
+#fullscreen-btn, #gallery-btn, #screenshot-btn, #screenshot-mobile-btn {
     display: none;
 }
+
 
 @media (max-width: 768px) {
     #header {
