@@ -971,6 +971,10 @@ footer {
     color: var(--neutral-500);
 }
 
+#fullscreen-btn, #gallery-btn, #screenshot-btn {
+    display: none;
+}
+
 @media (max-width: 768px) {
     #header {
         padding: var(--spacing-md);

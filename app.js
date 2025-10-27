@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loader = new GLTFLoader();
 
     // load default model for AR interactions
-    loadARModel('office_chair.glb');
+    loadARModel('office_chair.glb', 0.55);
 
     // AR Hit Test (place model on tap)
     const controller = renderer.xr.getController(0);
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderer.setAnimationLoop(() => { renderer.render(scene, camera); });
   }
 
-  function loadARModel(url, preferredScale = 0.5) {
+  function loadARModel(url, preferredScale = 0.55) {
     if (!loader) loader = new GLTFLoader();
     // keep reference to loader-loaded scene for cloning when placing in AR
     loader.load(url, (gltf) => {
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Accepts optional preferredScale to apply immediately after loading
   window.setARModel = function(url, preferredScale) {
     if (!url) return;
-    loadARModel(url, typeof preferredScale === 'number' ? preferredScale : 0.5);
+    loadARModel(url, typeof preferredScale === 'number' ? preferredScale : 0.55);
   };
 
   window.addEventListener('resize', () => {
